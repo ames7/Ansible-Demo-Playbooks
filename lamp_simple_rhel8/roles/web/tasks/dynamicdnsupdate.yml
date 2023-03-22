@@ -1,0 +1,9 @@
+---
+# These tasks dynamic update my url for ansibledemo.mooo.com.
+
+- name: Afraid.org DDNS update to host ansibledemo.mooo.com
+  ansible.builtin.uri:
+    url: "https://freedns.afraid.org/dynamic/update.php?{{ ddnstoken }}"
+    method: POST
+  register: ddnsinfo
+  when: ddnstoken is defined

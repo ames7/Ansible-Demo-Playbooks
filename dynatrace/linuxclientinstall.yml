@@ -7,7 +7,7 @@
   tasks:
     - name: Grab oneagent from instance
       ansible.builtin.get_url:
-        url: 'https://kzn34165.live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/latest?arch=x86&flavor=default'
+        url: 'https://zza90524.live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/latest?arch=x86&flavor=default'
         dest: "{{ oneagent_installpath }}{{ oneagent_version }}"
         headers:
           Authorization: Api-Token {{ oneagent_paas_token }}
@@ -20,7 +20,16 @@
     - name: Install Dynatrace OneAgent
       ansible.builtin.command:
         cmd: "{{ oneagent_installpath }}{{ oneagent_version }} --set-infra-only=false --set-app-log-content-access=true"
-    - name: Restart Httpd to have monitored
+    - name: Restart Services to have monitored
       ansible.builtin.service:
-        name: httpd
+        name: "{{ item }}"
         state: restarted
+      with_items:
+        - httpd 
+        - nginx 
+        - podman 
+        - receptor 
+        - postgresql
+        - mariadb  
+      ignore_errors: true
+    
